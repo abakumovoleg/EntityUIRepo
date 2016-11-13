@@ -39,7 +39,7 @@ namespace EntityUI.Controls.Refer
 
         private void buttonOpenReestr_Click(object sender, EventArgs e)
         {
-            using (var form = (ReestrFormBase<T>)_engine.CreateReestrForm<T>())
+            using (var form = (RegistryFormBase<T>)_engine.CreateReestrForm<T>())
             {
                 form.SaveButton.Visibility = BarItemVisibility.Always;
                 form.GridView.OptionsSelection.MultiSelect = _multiSelect;

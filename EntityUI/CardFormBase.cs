@@ -29,6 +29,9 @@ namespace EntityUI
 
         public void Init(T entity)
         {
+            var action = entity == null ? "Add" : "Edit";
+            Text = $"{typeof (T).Name} {action}";
+
             var props = typeof(T).GetProperties();
                        
             foreach (var prop in props)

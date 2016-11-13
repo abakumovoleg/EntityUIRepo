@@ -31,7 +31,7 @@ namespace EntityUI
 
         public Form CreateReestrForm<T>() where T : class
         {
-            var form = new ReestrFormBase<T>(_entityProvider, this);
+            var form = new RegistryFormBase<T>(_entityProvider, this);
             
             //add save button
 

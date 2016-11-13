@@ -14,12 +14,12 @@ using EntityUI.Controls;
 
 namespace EntityUI
 {
-    public partial class ReestrFormBase<T> : ReestrFormBase where T : class
+    public partial class RegistryFormBase<T> : RegistryFormBase where T : class
     {
         private readonly IEntityProvider _entityProvider;
         private readonly Engine _engine;
 
-        public ReestrFormBase()
+        public RegistryFormBase()
         {
             InitializeComponent();
             SaveButton.Visibility = BarItemVisibility.Never;
@@ -28,7 +28,7 @@ namespace EntityUI
 
         private readonly Dictionary<string,Func<T, object>> _unboundColumnFunctions = new Dictionary<string, Func<T, object>>();
 
-        public ReestrFormBase(IEntityProvider entityProvider, Engine engine)
+        public RegistryFormBase(IEntityProvider entityProvider, Engine engine)
             : this()
         {
             _entityProvider = entityProvider;
@@ -81,6 +81,8 @@ namespace EntityUI
 
         private async void OnLoad(object sender, EventArgs eventArgs)
         {
+            Text = $"{typeof(T).Name} Registry";
+
             await LoadDataSource();
         }
 

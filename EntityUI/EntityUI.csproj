@@ -86,13 +86,13 @@
     <Compile Include="Controls\UiControl.cs" />
     <Compile Include="PropertyAttribute.cs" />
     <Compile Include="PropertyLoader.cs" />
-    <Compile Include="ReestrFormBase.cs">
+    <Compile Include="RegistryFormBase.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ReestrFormBase.Designer.cs">
-      <DependentUpon>ReestrFormBase.cs</DependentUpon>
+    <Compile Include="RegistryFormBase.Designer.cs">
+      <DependentUpon>RegistryFormBase.cs</DependentUpon>
     </Compile>
-    <Compile Include="ReestrFormBaseStub.cs">
+    <Compile Include="RegistryFormBaseStub.cs">
       <SubType>Form</SubType>
     </Compile>
     <EmbeddedResource Include="CardFormBase.resx">
@@ -111,8 +111,8 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="ReestrFormBase.resx">
-      <DependentUpon>ReestrFormBase.cs</DependentUpon>
+    <EmbeddedResource Include="RegistryFormBase.resx">
+      <DependentUpon>RegistryFormBase.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

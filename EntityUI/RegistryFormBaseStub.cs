@@ -2,7 +2,7 @@ using System.Windows.Forms;
 
 namespace EntityUI
 {
-    public class ReestrFormBase : Form
+    public class RegistryFormBase : Form
     {
 
     }
