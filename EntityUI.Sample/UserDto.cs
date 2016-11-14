@@ -2,7 +2,7 @@
 
 namespace EntityUI.Sample
 {
-    class UserDto
+    public class UserDto
     {   
         [Property(ReadOnly = true)]
         public int Id { get; set; }
@@ -15,12 +15,16 @@ namespace EntityUI.Sample
 
         [Property(MaxValue = 100, MinValue = 0)]
         public int? Age { get; set; }
-
-        [Property(PropertyLoader = typeof(DefaultLoader<RoleDto>), Required = true, ControlType = ControlType.Reference)]
-        public List<RoleDto> Role { get; set; }
         
-        [Property(Required = true, PropertyLoader = typeof(DefaultLoader<FilialDto>))]
+        [Property(Required = true, 
+            PropertyLoader = typeof(DefaultLoader<FilialDto, UserDto>))]
         public FilialDto Filial { get; set; }
+
+        [Property(PropertyLoader = typeof (RoleLoader),
+            DependentProperties = new[] {"Filial"},
+            Required = true,
+            ControlType = ControlType.Reference)]
+        public List<RoleDto> Role { get; set; }
 
         public override string ToString()
         {

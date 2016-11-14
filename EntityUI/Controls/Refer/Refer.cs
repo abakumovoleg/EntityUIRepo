@@ -1,17 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using DevExpress.XtraBars;
 
 namespace EntityUI.Controls.Refer
 {
-    public partial class Refer<T> : UserControl where T : class
+    public partial class Refer<T> : UserControl where T : class, new()
     {
         private readonly Engine _engine;
         private readonly bool _multiSelect;
@@ -35,24 +29,34 @@ namespace EntityUI.Controls.Refer
             SetText();
         }
 
-        public List<T> Items { get; } = new List<T>();
+        public List<T> SelectedItems { get; } = new List<T>();
+
+        public void RefreshText()
+        {
+            SetText();
+        }
 
         private void buttonOpenReestr_Click(object sender, EventArgs e)
         {
             using (var form = (RegistryFormBase<T>)_engine.CreateReestrForm<T>())
             {
+                form.Loader = Loader;
+                form.StateProvider = StateProvider;
                 form.SaveButton.Visibility = BarItemVisibility.Always;
                 form.GridView.OptionsSelection.MultiSelect = _multiSelect;
 
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
-                    Items.Clear();
-                    Items.AddRange(form.SelectedItems);
+                    SelectedItems.Clear();
+                    SelectedItems.AddRange(form.SelectedItems);
                     SetText();
                     OnSelectedValueChanged();
                 }
             }
         }
+
+        public IPropertyLoader Loader { get; set; }
+        public IStateProvider StateProvider { get; set; }
 
         public event EventHandler SelectedValueChanged;
 
@@ -63,7 +67,7 @@ namespace EntityUI.Controls.Refer
 
         private void SetText()
         {
-            textBox1.Text = string.Join(",", Items);
+            textBox1.Text = string.Join(",", SelectedItems);
         }
     }
 }

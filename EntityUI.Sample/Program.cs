@@ -32,24 +32,6 @@ namespace EntityUI.Sample
         {
             var storage = new InMemoryEntityProvider();
 
-            var admin = new RoleDto
-            {
-                Id = 1,
-                Name = "Admin"
-            };
-
-            var simpleUser = new RoleDto
-            {
-                Id = 2,
-                Name = "User"
-            };
-
-            var roles = new List<RoleDto>
-            {
-                admin,
-                simpleUser
-            };
-
             var moscow = new FilialDto
             {
                 Id = 1,
@@ -62,15 +44,39 @@ namespace EntityUI.Sample
                 Name = "Cyprus"
             };
 
+            var uk = new FilialDto
+            {
+                Id = 3,
+                Name = "UK"
+            };
+
+            var admin = new RoleDto
+            {
+                Id = 1,
+                Name = "Admin",
+                Filial = new List<FilialDto> {moscow, uk}
+            };
+
+            var simpleUser = new RoleDto
+            {
+                Id = 2,
+                Name = "User",
+                Filial = new List<FilialDto> {cyprus, uk}
+            };
+
+            var roles = new List<RoleDto>
+            {
+                admin,
+                simpleUser
+            };
+
+
+
             var filials = new List<FilialDto>
             {
                 moscow,
                 cyprus,
-                new FilialDto
-                {
-                    Id = 3,
-                    Name = "UK"
-                }
+                uk
             };
 
             var users = new List<UserDto>

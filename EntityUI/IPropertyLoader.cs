@@ -2,8 +2,8 @@
 
 namespace EntityUI
 {
-    interface IPropertyLoader
+    public interface IPropertyLoader
     {
-        IList Load();
+        IList Load(object state);
     }
 }

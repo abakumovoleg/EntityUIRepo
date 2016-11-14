@@ -14,7 +14,7 @@ using EntityUI.Controls;
 
 namespace EntityUI
 {
-    public partial class RegistryFormBase<T> : RegistryFormBase where T : class
+    public partial class RegistryFormBase<T> : RegistryFormBase where T : class, new()
     {
         private readonly IEntityProvider _entityProvider;
         private readonly Engine _engine;
@@ -54,6 +54,9 @@ namespace EntityUI
             gridView1.EndUpdate();
         }
 
+        public IPropertyLoader Loader { get; set; }
+        public IStateProvider StateProvider { get; set; }
+
         private void GridView1OnCustomUnboundColumnData(object sender, CustomColumnDataEventArgs e)
         {
             if (_unboundColumnFunctions.ContainsKey(e.Column.FieldName))
@@ -88,7 +91,15 @@ namespace EntityUI
 
         private async Task LoadDataSource()
         {
-            var list = await Task.Run(() => _entityProvider.GetList<T>());
+            var state = StateProvider?.State;
+
+            var list = await Task.Run(() =>
+            {
+                if(Loader == null)
+                    return _entityProvider.GetList<T>();
+
+                return Loader.Load(state).Cast<T>().ToList();
+            });
             Items.Clear();
             Items.AddRange(list);
 

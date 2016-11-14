@@ -4,13 +4,13 @@ using System.Linq;
 
 namespace EntityUI
 {
-    public abstract class PropertyLoader<T> : IPropertyLoader
+    public abstract class PropertyLoader<T,TE> : IPropertyLoader
     {
-        public IList Load()
+        public IList Load(object state)
         {
-            return LoadItems().ToList();
+            return LoadItems((TE)state).ToList();
         }
 
-        protected abstract IList<T> LoadItems();        
+        protected abstract IList<T> LoadItems(TE state);        
     }
 }

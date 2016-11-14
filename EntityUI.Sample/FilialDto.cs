@@ -1,6 +1,6 @@
 ﻿namespace EntityUI.Sample
 {
-    class FilialDto
+    public class FilialDto
     {
         [Property(ReadOnly = true)]
         public int Id { get; set; }

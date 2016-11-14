@@ -66,6 +66,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoleDto.cs" />
+    <Compile Include="RoleLoader.cs" />
     <Compile Include="RoleLoaderForUser.cs" />
     <Compile Include="UnityDependencyContainer.cs" />
     <Compile Include="UserDto.cs" />

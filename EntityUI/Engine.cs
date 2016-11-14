@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using EntityUI.Controls;
 
@@ -16,7 +17,12 @@ namespace EntityUI
             _container.RegisterInstance<Engine, Engine>(this);
         }
 
-        public Form CreateCardForm<T>(T entity) where T : class
+        public IPropertyLoader GetLoader(Type type)
+        {
+            return (IPropertyLoader) _container.Resolve(type);
+        }
+
+        public Form CreateCardForm<T>(T entity) where T : class, new()
         {
             var form = new CardFormBase<T>(new ControlFactory(_container), _entityProvider);
 
@@ -29,7 +35,7 @@ namespace EntityUI
             return form;
         }
 
-        public Form CreateReestrForm<T>() where T : class
+        public Form CreateReestrForm<T>() where T : class, new()
         {
             var form = new RegistryFormBase<T>(_entityProvider, this);
             

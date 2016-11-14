@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq.Expressions;
 
 namespace EntityUI
 {
@@ -18,6 +19,7 @@ namespace EntityUI
         }
 
         public Type PropertyLoader { get; set; }
+        public string[] DependentProperties { get; set; }
         public ControlType ControlType { get; set; }
         public bool Required { get; set; }
         public int MaxLength { get; set; }

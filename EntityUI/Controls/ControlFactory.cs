@@ -13,7 +13,7 @@ namespace EntityUI.Controls
             _container = container;
         }
         
-        public UiControl Create(PropertyInfo prop)
+        public UiControl Create(PropertyInfo prop, IStateProvider stateProvider)
         {
             var attr = prop.GetCustomAttribute<PropertyAttribute>();
             
@@ -21,9 +21,6 @@ namespace EntityUI.Controls
             {
                 if (attr.PropertyLoader != null)
                 {
-                    var loader = (IPropertyLoader)_container.Resolve(attr.PropertyLoader);
-                    var items = loader.Load();
-
                     UiControl control;
 
                     var isCollection = typeof (IEnumerable).IsAssignableFrom(prop.PropertyType) &&
@@ -33,21 +30,17 @@ namespace EntityUI.Controls
                         ? prop.PropertyType.GenericTypeArguments[0]
                         : prop.PropertyType;
 
-                    switch (attr.ControlType)
+                    if (isCollection || attr.ControlType == ControlType.Reference)
                     {
-                        case ControlType.ComboBox:
-                            control = (UiControl)_container.Resolve(typeof(ComboUiControl));
-                            break;
-                        case ControlType.Reference:
-                            control = (UiControl)_container.Resolve(typeof(ReferUiControl<>).MakeGenericType(testType));
-                            if (isCollection)
-                                ((ICollectionUiControl) control).MultiSelect = true;
-                            break;
-                        default:
-                            throw new NotImplementedException();
+                        control = (UiControl)_container.Resolve(typeof(ReferUiControl<>).MakeGenericType(testType));
+                        if (isCollection)
+                            ((ICollectionUiControl)control).MultiSelect = true;
                     }
+                    else
+                        control = (UiControl)_container.Resolve(typeof(ComboUiControl));
+                            
 
-                    control.Init(prop, items);
+                    control.Init(prop, stateProvider );
 
                     return control;
                 }
@@ -56,14 +49,14 @@ namespace EntityUI.Controls
             if (prop.PropertyType == typeof (string))
             {
                 var control = (UiControl)_container.Resolve(typeof (TextEditUiControl));
-                control.Init(prop, null);
+                control.Init(prop, stateProvider);
                 return control;
             }
             
             if (prop.PropertyType == typeof (int) || prop.PropertyType == typeof (int?))
             {
                 var control = (UiControl)_container.Resolve(typeof(IntEditUiControl));
-                control.Init(prop, null);
+                control.Init(prop, stateProvider);
                 return control;
             }
 

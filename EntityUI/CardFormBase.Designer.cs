@@ -1,6 +1,6 @@
 ﻿namespace EntityUI
 {
-    partial class CardFormBase<T> where T : class
+    partial class CardFormBase<T> where T : class, new()
     {
         /// <summary>
         /// Required designer variable.

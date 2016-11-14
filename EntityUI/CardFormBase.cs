@@ -1,18 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using EntityUI.Controls;
 
 namespace EntityUI
 {
-    public partial class CardFormBase<T> : Form where T : class
+    public partial class CardFormBase<T> : Form, IStateProvider where T : class, new()
     {
         public CardFormBase()
         {
@@ -41,7 +36,7 @@ namespace EntityUI
         }
         
         private T _entity;
-        private readonly List<UiControl> _controls = new List<UiControl>();
+        private readonly Dictionary<string,UiControl> _controls = new Dictionary<string, UiControl>();
         private int _controlCount;
         private readonly ControlFactory _controlFactory;
         private readonly IEntityProvider _entityProvider;
@@ -50,9 +45,24 @@ namespace EntityUI
         {
             _entity = entity;
             tableLayoutPanel1.Controls.Add(new Label { Text = prop.Name }, 0, _controlCount);
-            var control = _controlFactory.Create(prop);
+            var control = _controlFactory.Create(prop, this);
             control.Control.Margin = new Padding(0,0,25,0);
-            control.ValueChanged += (sender, args) => errorProvider1.SetError(control.Control, string.Empty);
+            control.ValueChanged += (sender, args) =>
+            {
+                errorProvider1.SetError(control.Control, string.Empty);
+
+                var ctrl = (UiControl) sender;
+
+                foreach (var value in _controls.Values)
+                {
+                    if (value is IDataControl && value.PropertyAttribute != null &&
+                        value.PropertyAttribute.DependentProperties != null &&
+                        value.PropertyAttribute.DependentProperties.Contains(ctrl.PropertyInfo.Name))
+                    {
+                        (value as IDataControl).ReloadData();
+                    }
+                }
+            };
 
             if (entity != null)
             {
@@ -65,7 +75,7 @@ namespace EntityUI
 
             tableLayoutPanel1.RowStyles.Add(new RowStyle { SizeType = SizeType.AutoSize });
 
-            _controls.Add(control);
+            _controls[prop.Name] = control;
             _controlCount++;
         }
 
@@ -76,7 +86,7 @@ namespace EntityUI
 
             var entity = _entity ?? Activator.CreateInstance(typeof(T)) as T;
 
-            foreach (var control in _controls)
+            foreach (var control in _controls.Values)
             {
                 var value = control.GetValue();
 
@@ -95,7 +105,7 @@ namespace EntityUI
         {
             var validate = true;
 
-            foreach (var control in _controls)
+            foreach (var control in _controls.Values)
             {
                 var value = control.GetValue();
                 var strValue = Convert.ToString(value);
@@ -112,6 +122,23 @@ namespace EntityUI
             }
 
             return validate;
+        }
+
+        public object State
+        {
+            get
+            {
+                var state = new T();
+
+                foreach (var control in _controls.Values)
+                {
+                    var value = control.GetValue();
+
+                    control.PropertyInfo.SetValue(state, value);
+                }
+
+                return state;
+            }
         }
     }
 }

@@ -7,18 +7,18 @@ using System.Windows.Forms;
 
 namespace EntityUI.Controls
 {
+    public interface IStateProvider
+    {
+        object State { get; }
+    }
+
     public abstract class UiControl
     {
-        protected List<object> Values;
-        
-        public void Init(PropertyInfo propertyInfo, IEnumerable values)
+        public void Init(PropertyInfo propertyInfo, IStateProvider stateProvider)
         {
-            Values = new List<object>();
-
-            if(values != null)
-                Values.AddRange(values.Cast<object>());
-
             PropertyInfo = propertyInfo;
+
+            StateProvider = stateProvider;
 
             AfterInit();
         }
@@ -29,10 +29,12 @@ namespace EntityUI.Controls
 
         public PropertyAttribute PropertyAttribute => PropertyInfo.GetCustomAttribute<PropertyAttribute>();
 
+        public IStateProvider StateProvider { get; set; }
         public PropertyInfo PropertyInfo { get; set; }
         public abstract void SetValue(object value);
         public abstract object GetValue();
         public event EventHandler ValueChanged;
+        
 
         protected void OnValueChanged()
         {

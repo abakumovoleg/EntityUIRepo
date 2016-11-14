@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using EntityUI.Controls.Refer;
 
@@ -9,7 +10,7 @@ namespace EntityUI.Controls
     {
         bool MultiSelect { get; set; }
     }
-    public class ReferUiControl<T> : UiControl, ICollectionUiControl where T : class
+    public class ReferUiControl<T> : UiControl, IDataControl, ICollectionUiControl where T : class, new()
     {
         private readonly Engine _engine;
         private Refer<T> _comboBox;
@@ -22,7 +23,7 @@ namespace EntityUI.Controls
         
         public override object GetValue()
         {
-            return _comboBox.Items;
+            return _comboBox.SelectedItems;
         }
 
         protected override void AfterInit()
@@ -31,14 +32,27 @@ namespace EntityUI.Controls
 
             _comboBox.SelectedValueChanged += (sender, args) => OnValueChanged();
 
-            foreach (var val in Values)
-                _comboBox.Items.Add((T)val);
+            ReloadData();
         }
 
         public override void SetValue(object value)
         {
-            _comboBox.Items.Clear();
-            _comboBox.Items.AddRange((List<T>) value);
+            _comboBox.SelectedItems.Clear();
+            _comboBox.SelectedItems.AddRange((List<T>) value);
+        }
+
+        public void ReloadData()
+        {
+            var loader = _engine.GetLoader(PropertyAttribute.PropertyLoader);
+            _comboBox.Loader = loader;
+            _comboBox.StateProvider = StateProvider;
+
+            var items = loader.Load(StateProvider.State);
+            
+            var newItems = _comboBox.SelectedItems.Where(x => items.Contains(x)).ToList();
+            _comboBox.SelectedItems.Clear();
+            _comboBox.SelectedItems.AddRange(newItems);
+            _comboBox.RefreshText();
         }
     }
 }

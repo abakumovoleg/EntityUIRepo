@@ -1,6 +1,6 @@
 ﻿namespace EntityUI.Controls.Refer
 {
-    partial class Refer<T> where T : class
+    partial class Refer<T> where T : class, new()
     {
         /// <summary> 
         /// Required designer variable.

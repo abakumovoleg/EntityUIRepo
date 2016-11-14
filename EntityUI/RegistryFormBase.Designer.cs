@@ -1,6 +1,6 @@
 ﻿namespace EntityUI
 {
-    partial class RegistryFormBase<T> where T : class
+    partial class RegistryFormBase<T> where T : class, new()
     {
         /// <summary>
         /// Required designer variable.

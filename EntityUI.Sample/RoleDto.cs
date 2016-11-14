@@ -1,12 +1,17 @@
+using System.Collections.Generic;
+
 namespace EntityUI.Sample
 {
-    class RoleDto
+    public class RoleDto
     {
         [Property(ReadOnly = true)]
         public int Id { get; set; }
 
         [Property(MaxLength = 100)]
         public string Name { get; set; }
+
+        [Property(Required = true, ControlType = ControlType.Reference)]
+        public List<FilialDto> Filial { get; set; }
 
         public override string ToString()
         {
